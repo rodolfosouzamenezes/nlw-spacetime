@@ -1,10 +1,32 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
+
+import {
+  useFonts,
+  Roboto_400Regular,
+  Roboto_700Bold,
+} from '@expo-google-fonts/roboto';
+
+import {
+  BaiJamjuree_700Bold,
+} from '@expo-google-fonts/bai-jamjuree';
 
 export default function App() {
+  const [hasLoadedFonts] = useFonts({
+    Roboto_400Regular,
+    Roboto_700Bold,
+    BaiJamjuree_700Bold,
+  })
+
+  if (!hasLoadedFonts) {
+    return null
+  }
+
   return (
-    <View className='flex-1 items-center justify-center bg-gray-950'>
-      <Text className='text-zinc-50 font-bold text-5xl'>HAHAHAHAHHAHAHAHHAHAHAHHAHAHAAHHA</Text>
+    <View className='flex-1 items-center justify-center bg-gray-900'>
+      <Text className='text-gray-50 text-5xl font-alt'>
+        Rocketseat
+      </Text>
       <StatusBar style="light" translucent />
     </View>
   );
