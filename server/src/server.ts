@@ -2,6 +2,9 @@ import fastify from 'fastify'
 import cors from '@fastify/cors'
 import { memoryRoutes } from './routes/memory';
 
+import 'dotenv/config'
+import { authRoutes } from './routes/auth';
+
 const app = fastify();
 
 const PORT = 3333;
@@ -11,6 +14,7 @@ app.register(cors, {
 })
 
 app.register(memoryRoutes)
+app.register(authRoutes)
 
 app
     .listen({
