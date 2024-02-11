@@ -1,20 +1,12 @@
-import { ImageBackground, Text, TouchableOpacity, View } from 'react-native';
-import { StatusBar } from 'expo-status-bar';
-import { useFonts } from '@expo-google-fonts/roboto';
-import colors from 'tailwindcss/colors';
-import * as SecureStore from 'expo-secure-store';
-
-import blurBg from '../assets/bg-blur.png';
-import NlwLogo from '../assets/nlw-spacetime-logo.svg';
-import Stripes from '../assets/stripes.svg';
-const StyledStripes = styled(Stripes)
-
-import { fonts } from '../fonts';
-import { styled } from 'nativewind';
 import { makeRedirectUri, useAuthRequest } from 'expo-auth-session';
-import { useEffect } from 'react';
-import { api } from '../lib/axios';
+import { Text, TouchableOpacity, View } from 'react-native';
+import * as SecureStore from 'expo-secure-store';
 import { useRouter } from 'expo-router';
+import { useEffect } from 'react';
+
+import NlwLogo from '../assets/nlw-spacetime-logo.svg';
+
+import { api } from '../lib/axios';
 
 const discovery = {
   authorizationEndpoint: 'https://github.com/login/oauth/authorize',
@@ -23,7 +15,6 @@ const discovery = {
 };
 
 export default function Home() {
-  const [hasLoadedFonts] = useFonts(fonts)
   const router = useRouter()
 
   const [request, response, signInWithGithub] = useAuthRequest(
@@ -64,18 +55,8 @@ export default function Home() {
     }
   }, [response]);
 
-  if (!hasLoadedFonts) {
-    return null
-  }
-
   return (
-    <ImageBackground
-      source={blurBg}
-      className='relative flex-1 px-8 py-10 items-center bg-gray-900'
-      imageStyle={{ position: 'absolute', left: '-99%' }}
-    >
-      <StyledStripes style={{position: 'absolute', left: '0%'}} />
-
+    <View className='flex-1 px-8 py-10 items-center'>
       <View className='flex-1 items-center justify-center gap-6'>
         <NlwLogo />
         <View className='space-y-2'>
@@ -101,7 +82,6 @@ export default function Home() {
       <Text className='text-center font-body text-sm leading-relaxed text-gray-200'>
         Feito com 💜 no NLW da Rocketseat
       </Text>
-      <StatusBar style="light" backgroundColor={colors.gray[950]} translucent  />
-    </ImageBackground>
+    </View>
   );
 }
