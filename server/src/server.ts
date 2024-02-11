@@ -1,10 +1,14 @@
 import 'dotenv/config'
-import fastify from 'fastify'
+
+import multipart from '@fastify/multipart';
 import cors from '@fastify/cors'
 import jwt from '@fastify/jwt'
-import { memoryRoutes } from './routes/memory';
+import fastify from 'fastify'
 
+import { memoryRoutes } from './routes/memory';
+import { uploadRoutes } from './routes/upload';
 import { authRoutes } from './routes/auth';
+import { resolve } from 'node:path';
 
 const app = fastify();
 
@@ -19,8 +23,15 @@ app.register(jwt, {
     secret,
 })
 
-app.register(memoryRoutes)
+app.register(multipart)
+app.register(require('@fastify/static'), {
+    root: resolve(__dirname, '../uploads'),
+    prefix: '/uploads'
+})
+app.register(uploadRoutes)
+
 app.register(authRoutes)
+app.register(memoryRoutes)
 
 app
     .listen({
