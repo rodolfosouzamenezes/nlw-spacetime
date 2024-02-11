@@ -1,18 +1,20 @@
 import { ImageBackground, Text, TouchableOpacity, View } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { useFonts } from '@expo-google-fonts/roboto';
+import colors from 'tailwindcss/colors';
 import * as SecureStore from 'expo-secure-store';
 
-import blurBg from './src/assets/bg-blur.png';
-import NlwLogo from './src/assets/nlw-spacetime-logo.svg';
-import Stripes from './src/assets/stripes.svg';
+import blurBg from '../assets/bg-blur.png';
+import NlwLogo from '../assets/nlw-spacetime-logo.svg';
+import Stripes from '../assets/stripes.svg';
 const StyledStripes = styled(Stripes)
 
-import { fonts } from './src/fonts';
+import { fonts } from '../fonts';
 import { styled } from 'nativewind';
 import { makeRedirectUri, useAuthRequest } from 'expo-auth-session';
 import { useEffect } from 'react';
-import { api } from './src/lib/axios';
+import { api } from '../lib/axios';
+import { useRouter } from 'expo-router';
 
 const discovery = {
   authorizationEndpoint: 'https://github.com/login/oauth/authorize',
@@ -20,8 +22,9 @@ const discovery = {
   revocationEndpoint: 'https://github.com/settings/connections/applications/8e4a456a09fdcd1fcb64',
 };
 
-export default function App() {
+export default function Home() {
   const [hasLoadedFonts] = useFonts(fonts)
+  const router = useRouter()
 
   const [request, response, signInWithGithub] = useAuthRequest(
     {
@@ -34,26 +37,30 @@ export default function App() {
     discovery
   );
 
-  useEffect(() => {
-    // console.log(makeRedirectUri({
-    //   scheme: 'nlwspacetime'
-    // }),);
+  const getRedirectUrl = () => {
+    console.log(makeRedirectUri({
+      scheme: 'nlwspacetime'
+    }),);
+  }
 
+  const handleGithubOauth = async (code: string) => {
+    const response = await api.post('/auth', {
+      code
+    })
+
+    const {token} = response.data  
+    await SecureStore.setItemAsync('token', token)
+    console.log('Token: ', token);
+
+    router.push('/memories')
+  }
+
+  useEffect(() => {
+    // getRedirectUrl()
     if (response?.type === 'success') {
       const { code } = response.params;
 
-      api.post('/auth', {
-        code
-      }).then((res) => {
-        const {token} = res.data
-        
-        SecureStore.setItemAsync('token', token)
-        console.log(token);
-        
-      }).catch((err) => {
-        console.log(err)
-      })
-      
+      handleGithubOauth(code)
     }
   }, [response]);
 
@@ -65,9 +72,9 @@ export default function App() {
     <ImageBackground
       source={blurBg}
       className='relative flex-1 px-8 py-10 items-center bg-gray-900'
-      imageStyle={{ position: 'absolute', left: '-100%' }}
+      imageStyle={{ position: 'absolute', left: '-99%' }}
     >
-      <StyledStripes className='absolute left-2' />
+      <StyledStripes style={{position: 'absolute', left: '0%'}} />
 
       <View className='flex-1 items-center justify-center gap-6'>
         <NlwLogo />
@@ -94,7 +101,7 @@ export default function App() {
       <Text className='text-center font-body text-sm leading-relaxed text-gray-200'>
         Feito com 💜 no NLW da Rocketseat
       </Text>
-      <StatusBar style="light" translucent />
+      <StatusBar style="light" backgroundColor={colors.gray[950]} translucent  />
     </ImageBackground>
   );
 }
