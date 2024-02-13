@@ -60,7 +60,7 @@ export default function NewMemory() {
         },
       })
 
-      coverUrl = uploadResponse.data.fileUrl
+      coverUrl = uploadResponse.data.fileUrl      
     }
 
     await api.post('/memory', {
