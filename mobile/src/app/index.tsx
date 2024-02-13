@@ -8,10 +8,12 @@ import NlwLogo from '../assets/nlw-spacetime-logo.svg';
 
 import { api } from '../lib/axios';
 
+const clientId = process.env.EXPO_PUBLIC_GITHUB_CLIENT_ID
+
 const discovery = {
   authorizationEndpoint: 'https://github.com/login/oauth/authorize',
   tokenEndpoint: 'https://github.com/login/oauth/access_token',
-  revocationEndpoint: 'https://github.com/settings/connections/applications/8e4a456a09fdcd1fcb64',
+  revocationEndpoint: `https://github.com/settings/connections/applications/${clientId}`,
 };
 
 export default function Home() {
@@ -19,7 +21,7 @@ export default function Home() {
 
   const [request, response, signInWithGithub] = useAuthRequest(
     {
-      clientId: '8e4a456a09fdcd1fcb64',
+      clientId,
       scopes: ['identity'],
       redirectUri: makeRedirectUri({
         scheme: 'nlwspacetime'
