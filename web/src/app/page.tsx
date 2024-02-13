@@ -43,8 +43,8 @@ export default async function Home() {
             <Image 
               src={m.coverUrl}
               alt=""
-              width={592}
-              height={280}
+              width={1000}
+              height={900}
               quality={100}
               className="w-full aspect-video object-cover rounded-lg"
             />

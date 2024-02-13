@@ -9,13 +9,16 @@ const pump = promisify(pipeline)
 
 export async function uploadRoutes(app: FastifyInstance) {
     app.post('/upload', async (request, reply) => {
-        const upload = await request.file()
+        const upload = await request.file({
+            limits: {
+                fileSize: 5_242_880, //5mb
+            }
+        })
 
         if (!upload) {
             return reply.status(400).send()
         }
 
-        
         const fileExtension = extname(upload.filename); 
         
         const isValidFileFormat = fileExtension === '.jpg' || fileExtension === '.jpeg' || fileExtension === '.png' || fileExtension === '.gif'
